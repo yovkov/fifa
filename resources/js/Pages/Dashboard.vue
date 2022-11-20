@@ -24,17 +24,17 @@
                         </div>
                     </div>
                     <div class="w-3/5 items-center justify-center text-center mx-auto">
-                        <div class="w-fit whitespace-nowrap mx-auto px-12 text-gray-400 p-2 rounded-lg border-[1px] border-gray-400 mb-2 block" :class="[(game.home_score == game.prediction.home_score && game.away_score == game.prediction.away_score) ? 'bg-green-100' : 'bg-red-100']" v-if="game.prediction && game.time_elapsed != 'notstarted'">
+                        <div class="w-fit whitespace-nowrap mx-auto px-12 text-gray-400 p-2 rounded-lg border-[1px] border-gray-400 mb-2 block" :class="[(game.home_score == game.prediction.home_score && game.away_score == game.prediction.away_score) ? 'bg-green-100' : 'bg-red-100']" v-if="game.prediction &&  moment().isAfter(game.game_date)">
                             {{game.prediction.home_score}}-{{game.prediction.away_score}}
                         </div>
-                        <div class="w-fit mx-auto" v-if="game.prediction && game.time_elapsed == 'notstarted'">
+                        <div class="w-fit mx-auto" v-if="game.prediction &&  moment().isBefore(game.game_date)">
                             <div class="w-fit text-gray-400 p-2 rounded-lg border-[1px] border-gray-400 mb-2 block relative">
                                 <div class="w-fit whitespace-nowrap px-12">{{predictionInputs[game.id+'_home_score']}}-{{predictionInputs[game.id+'_away_score']}}</div>
                                 <PencilIcon @click="showPredictionInput(game)" class="absolute top-2 right-2 h-6 w-6 text-gray-500 rounded-full bg-gray-100 p-1" />
                             </div>
                         </div>
                         
-                        <div class="w-min mx-auto whitespace-nowrap cursor-pointer py-2 px-4 rounded-full mb-2 block bg-blue-600 text-white text-xs" v-if="!game.prediction && game.time_elapsed == 'notstarted' && !predictionShow.includes(game.id)" @click="showPredictionInput(game)">
+                        <div class="w-min mx-auto whitespace-nowrap cursor-pointer py-2 px-4 rounded-full mb-2 block bg-blue-600 text-white text-xs" v-if="!game.prediction &&  moment().isBefore(game.game_date) && !predictionShow.includes(game.id)" @click="showPredictionInput(game)">
                             Add prediction
                         </div>
                         <div class="w-fit mx-auto whitespace-nowrap">
@@ -50,7 +50,7 @@
                             </form>
                         </div>
                         
-                        <div class="whitespace-nowrap text-gray-400" v-if="game.time_elapsed == 'notstarted'">{{formatDate(game.game_date)}}</div>
+                        <div class="whitespace-nowrap text-gray-400" v-if=" moment().isBefore(game.game_date)">{{formatDate(game.game_date)}}</div>
                     </div>
                 </div>
             </div>
@@ -126,6 +126,7 @@ export default {
             allGames,
             predictionInputs,
             savePrediction,
+            moment,
         }
 
     }
