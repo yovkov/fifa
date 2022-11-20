@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         
-                        <div class="w-min mx-auto whitespace-nowrap cursor-pointer py-1 px-2 rounded-full mb-2 block bg-blue-600 text-white text-xs" v-if="!game.prediction && game.time_elapsed == 'notstarted' && !predictionShow.includes(game.id)" @click="showPredictionInput(game)">
+                        <div class="w-min mx-auto whitespace-nowrap cursor-pointer py-2 px-4 rounded-full mb-2 block bg-blue-600 text-white text-xs" v-if="!game.prediction && game.time_elapsed == 'notstarted' && !predictionShow.includes(game.id)" @click="showPredictionInput(game)">
                             Add prediction
                         </div>
                         <div class="w-fit mx-auto whitespace-nowrap">
@@ -44,8 +44,8 @@
                                     <input pattern="[0-9]{2}" type="number" v-model="predictionInputs[game.id+'_away_score']" min="0" name="away_score" :id="game.id+'_away_score'" class="w-1/2 text-center relative block rounded-none rounded-r border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
                                 <div v-if="predictionShow.includes(game.id)" class="w-full mx-auto flex mt-2 mb-2">
-                                    <button class="w-1/2 cursor-pointer bg-red-600 text-white px-2 py-1 text-xs rounded-full mr-2" @click="cancelPredictionInput(game)">Cancel</button>
-                                    <input type="submit" value="Save" class="w-1/2 cursor-pointer bg-green-600 text-white px-2 py-1 text-xs  rounded-full">
+                                    <button class="w-1/2 cursor-pointer bg-red-600 text-white px-2 py-2 text-xs rounded-full mr-2" @click="cancelPredictionInput(game)">Cancel</button>
+                                    <input type="submit" value="Save" class="w-1/2 cursor-pointer bg-green-600 text-white px-2 py-2 text-xs  rounded-full">
                                 </div>
                             </form>
                         </div>
