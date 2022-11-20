@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\GamesController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Auth/Login');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/games', [GamesController::class, 'index'])->name('games.list');
+    Route::post('/predictions/save', [GamesController::class, 'store'])->name('prediction.save');
+});
+
+
+
+require __DIR__.'/auth.php';
