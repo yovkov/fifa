@@ -30,14 +30,16 @@
                         <span class="cursor-pointer py-1 px-2 rounded-full mb-2 block bg-blue-600 text-white text-xs" v-if="!game.prediction && game.time_elapsed == 'notstarted' && !predictionShow.includes(game.id)" @click="showPredictionInput(game)">
                             Add prediction
                         </span>
-                        <div v-if="predictionShow.includes(game.id)" class="flex w-full">
-                            <input type="number" v-model="predictionInputs[game.id+'_home_score']" min="0" name="home_score" :id="game.id+'_home_score'" class="w-1/2 text-center relative block rounded-none rounded-l border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                            <input type="number" v-model="predictionInputs[game.id+'_away_score']" min="0" name="away_score" :id="game.id+'_away_score'" class="w-1/2 text-center relative block rounded-none rounded-r border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        </div>
-                        <div v-if="predictionShow.includes(game.id)" class="flex mt-2 mb-2">
-                        <span class="w-1/2 cursor-pointer bg-red-600 text-white px-2 py-1 text-xs rounded-full mr-2" @click="cancelPredictionInput(game)">Cancel</span>
-                        <span class="w-1/2 cursor-pointer bg-green-600 text-white px-2 py-1 text-xs  rounded-full" @click="savePrediction(game)">Save</span>
-                        </div>
+                        <form  @submit.prevent="savePrediction(game)">
+                            <div v-if="predictionShow.includes(game.id)" class="flex w-full">
+                                <input pattern="[0-9]{2}" type="number" v-model="predictionInputs[game.id+'_home_score']" min="0" name="home_score" :id="game.id+'_home_score'" class="w-1/2 text-center relative block rounded-none rounded-l border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input pattern="[0-9]{2}" type="number" v-model="predictionInputs[game.id+'_away_score']" min="0" name="away_score" :id="game.id+'_away_score'" class="w-1/2 text-center relative block rounded-none rounded-r border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div v-if="predictionShow.includes(game.id)" class="flex mt-2 mb-2">
+                                <button class="w-1/2 cursor-pointer bg-red-600 text-white px-2 py-1 text-xs rounded-full mr-2" @click="cancelPredictionInput(game)">Cancel</button>
+                                <input type="submit" value="Save" class="w-1/2 cursor-pointer bg-green-600 text-white px-2 py-1 text-xs  rounded-full">
+                            </div>
+                        </form>
                         <span v-if="game.time_elapsed == 'notstarted'" class="text-gray-400">{{formatDate(game.game_date)}}</span>
                     </div>
                     <div class="w-2/5 text-left items-center flex justify-start p-2">
