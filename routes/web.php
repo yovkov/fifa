@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/games', [GamesController::class, 'index'])->name('games.list');
     Route::post('/predictions/save', [GamesController::class, 'store'])->name('prediction.save');
+    Route::get('/leaderboard', [GamesController::class, 'scores'])->name('leaderboard');
 });
 
 
