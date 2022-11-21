@@ -55,7 +55,7 @@ class GamesController extends Controller
             $existsPrediction = Prediction::create($request->toArray());
         }
 
-        $games = Game::with('home')->with('away')->with('prediction')->orderby('game_date','ASC')->get();
+        $games = Game::with('home')->with('away')->with('prediction')->with('allPredictions.user')->orderby('game_date','ASC')->get();
         
 
         return response([
