@@ -15,4 +15,8 @@ class Prediction extends Model
         'home_score',
         'away_score',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

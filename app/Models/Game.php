@@ -23,4 +23,8 @@ class Game extends Model
     public function prediction() {
         return $this->hasOne(Prediction::class)->where('user_id',auth()->user()->id);
     }
+
+    public function allPredictions() {
+        return $this->hasMany(Prediction::class);
+    }
 }

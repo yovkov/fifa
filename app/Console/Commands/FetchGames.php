@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Game;
+use App\Models\Standing;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -66,6 +67,33 @@ class FetchGames extends Command
             $existsGame->time_elapsed = $game->time_elapsed;
 
             $existsGame->save();
+        }
+
+        $response = Http::withToken($token)->get('http://api.cup2022.ir/api/v1/standings')->object();
+
+        foreach ($response->data as $group) {
+            $groupLetter = $group->group;
+
+            foreach ($group->teams as $team) {
+                $existsTeam = Standing::where('group',$groupLetter)->where('team_id',$team->team_id)->first();
+
+                if (!$existsTeam) {
+                    $existsTeam = new Standing;
+                }
+                
+                $existsTeam->group = $groupLetter;
+                $existsTeam->team_id = $team->team_id;
+                $existsTeam->mp = $team->mp;
+                $existsTeam->w = $team->w;
+                $existsTeam->l = $team->l;
+                $existsTeam->d = $team->d;
+                $existsTeam->gf = $team->gf;
+                $existsTeam->ga = $team->ga;
+                $existsTeam->gd = $team->gd;
+                $existsTeam->pts = $team->pts;
+
+                $existsTeam->save();
+            }
         }
         
         return Command::SUCCESS;

@@ -8,8 +8,10 @@
             </h2>
         </template>
 
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4" v-for="game in allGames" :key="game.id">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+        <div class="flex">
+            <div class="w-full">
+                <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4" v-for="game in allGames" :key="game.id">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 relative">
                     <div class="flex w-full items-start">
                         <div class="w-2/5 text-right flex items-center justify-end p-2">
                             <span>{{game.home.name}}</span>
@@ -51,9 +53,69 @@
                         </div>
                         
                         <div class="whitespace-nowrap text-gray-400" v-if=" moment().isBefore(game.game_date)">{{formatDate(game.game_date)}}</div>
+
+                    </div>
+                    <ChevronDownIcon v-if="!selectedGame || selectedGame.id != game.id" @click="showDetails(game)" class="mx-auto h-8 w-8 text-gray-500 rounded-full bg-gray-100 p-1 hover:bg-blue-600 hover:text-white cursor-pointer" />
+                    <ChevronUpIcon v-if="selectedGame && selectedGame.id == game.id" @click="hideDetails(game)" class="mx-auto h-8 w-8 text-gray-500 rounded-full bg-gray-100 p-1 hover:bg-blue-600 hover:text-white cursor-pointer" />
+
+                    <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4 md:flex" v-if="selectedGroupStandings && selectedGame.id == game.id">
+                    <div class="sm:w-full md:w-1/2 overflow-hidden sm:rounded-lg p-4 bg-slate-100 sm:mb-4 md:mb-0">
+                        <h1 class="text-lg font-bold">Group {{selectedGroupStandings[0].group}}</h1>
+                        <table class="table-auto w-full" cellpadding="10">
+                            <thead>
+                                <tr class="h-8 bg-gray-100">
+                                    <th class="text-left">Team</th>
+                                    <th class="text-right">MP</th>
+                                    <th class="text-right">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="team in selectedGroupStandings" :key="team.team_id" class="h-8">
+                                    <td class="text-left flex">
+                                        <img :src="team.team.flag" alt="" class="h-4 w-auto max-w-[25px] mx-2" />
+                                        <span>{{team.team.name}}</span>
+                                    </td>
+                                    <td class="text-right">{{team.mp}}</td>
+                                    <td class="text-right">{{team.pts}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <div class="sm:w-full md:w-1/2 overflow-hidden sm:rounded-lg p-4 md:ml-4 bg-slate-100">
+                        <h1 class="text-lg font-bold">All predictions so far</h1>
+                        <table class="table-auto w-full" cellpadding="10">
+                            <thead>
+                                <tr class="h-8 bg-gray-100">
+                                    <th class="text-left">User</th>
+                                    <th class="text-right">
+                                        <span>{{selectedGame.home.name}}</span>
+                                        <img :src="selectedGame.home.flag" alt="" class="h-4 w-auto max-w-[25px] mx-2 inline-block">    
+                                    </th>
+                                    <th class="text-left">
+                                        <img :src="selectedGame.away.flag" alt="" class="h-4 w-auto max-w-[25px] mx-2 inline-block">
+                                        <span>{{selectedGame.away.name}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="prediction in selectedGame.all_predictions" :key="prediction.id" class="h-8">
+                                    <td class="text-left">
+                                        <span>{{prediction.user.name}}</span>
+                                    </td>
+                                    <td class="text-right">{{prediction.home_score}}</td>
+                                    <td class="text-left">{{prediction.away_score}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                </div>
+                
+                </div>
             </div>
+        </div>
+            
     </AuthenticatedLayout>
 </template>
 
@@ -62,7 +124,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import moment from 'moment';
 import { ref, onMounted } from 'vue';
-import { PencilIcon } from '@heroicons/vue/20/solid'
+import { PencilIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
 import axios from 'axios';
 
 export default {
@@ -70,14 +132,20 @@ export default {
         AuthenticatedLayout,
         Head,
         PencilIcon,
+        ChevronDownIcon,
+        ChevronUpIcon,
     },
 
     props: {
         games: Object,
+        standings: Object,
     },
 
     setup(props) {
         const allGames = ref(props.games)
+        const allStandings = ref(props.standings)
+        const selectedGroupStandings = ref()
+        const selectedGame = ref()
         const predictionInputs = ref([])
         const predictionShow = ref([])
         const formatDate = function(date) {
@@ -110,6 +178,16 @@ export default {
             })
         }
 
+        const showDetails = function(game) {
+            selectedGame.value = game
+            selectedGroupStandings.value = allStandings.value.filter(o => o.group == game.group)
+        }
+
+        const hideDetails = function(game) {
+            selectedGame.value = null
+            selectedGroupStandings.value = null
+        }
+
         onMounted(() => {
             allGames.value.forEach(game => {
                 predictionInputs.value[game.id+'_home_score'] = game.prediction ? game.prediction.home_score : 0
@@ -127,6 +205,10 @@ export default {
             predictionInputs,
             savePrediction,
             moment,
+            selectedGroupStandings,
+            showDetails,
+            selectedGame,
+            hideDetails,
         }
 
     }

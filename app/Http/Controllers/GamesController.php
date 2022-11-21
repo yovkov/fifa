@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Inertia\Inertia;
+use App\Models\Standing;
 use App\Models\Prediction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,8 @@ class GamesController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Dashboard', [
-            'games' => Game::with('home')->with('away')->with('prediction')->orderby('game_date','ASC')->get(),
+            'games' => Game::with('home')->with('away')->with('prediction')->with('allPredictions.user')->orderby('game_date','ASC')->get(),
+            'standings' => Standing::with('team')->get()
         ]);
     }
 
