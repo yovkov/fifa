@@ -17,12 +17,12 @@
                             <b>Points</b> - calculation of total points, where an Outcome is 1 point, and a Result is 3 points
                         </p>
                     </div>
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 m-4 relative mt-4">
+                    <div class="bg-white shadow-sm sm:rounded-lg p-4 m-4 relative mt-4">
                         <table class="table-auto w-full divide-y divide-gray-300" cellpadding="10">
                             <thead class="bg-gray-100">
                                 <tr class="h-8">
                                     <th class="text-left text-sm font-bold text-gray-900">User</th>
-                                    <th class="text-right text-sm font-bold text-gray-900">Predictions</th>
+                                    <th class="hidden sm:table-cell text-right text-sm font-bold text-gray-900">Predictions</th>
                                     <th class="text-right text-sm font-bold text-gray-900">Outcomes</th>
                                     <th class="text-right text-sm font-bold text-gray-900">Results</th>
                                     <th class="text-right text-sm font-bold text-gray-900">Points</th>
@@ -33,7 +33,7 @@
                                     <td class="text-left text-sm font-medium text-gray-900">
                                         {{user.user.name}}
                                     </td>
-                                    <td class="text-right text-sm text-gray-500">{{user.predictions}}</td>
+                                    <td class="hidden sm:table-cell text-right text-sm text-gray-500">{{user.predictions}}</td>
                                     <td class="text-right text-sm text-gray-500">{{user.outcomes}}</td>
                                     <td class="text-right text-sm text-gray-500">{{user.results}}</td>
                                     <td class="text-right text-sm text-gray-500">{{user.points}}</td>
