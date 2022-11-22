@@ -39,6 +39,8 @@ class FetchGames extends Command
             }', 'application/json'
         )->post('http://api.cup2022.ir/api/v1/user/login')->object();
 
+        //ray($response);
+
         $token = $response->data->token;
 
         $response = Http::withToken($token)->get('http://api.cup2022.ir/api/v1/match')->object();

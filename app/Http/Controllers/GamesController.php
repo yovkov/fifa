@@ -79,26 +79,28 @@ class GamesController extends Controller
             $outcomesPredicted = 0;
             $totalPredictions = 0;
             foreach ($user->predictions as $prediction) {
-                $home_score = $prediction->game->home_score;
-                $away_score = $prediction->game->away_score;
-                $home_prediction = $prediction->home_score;
-                $away_prediction = $prediction->away_score;
-
-                $diff_score = $home_score - $away_score;
-                $diff_prediction = $home_prediction - $away_prediction;
-                $outcome = $diff_score * $diff_prediction;
-
-                if ($home_score == $home_prediction && $away_score == $away_prediction) {
-                    $points += 3;
-                    $resultsPredicted ++;
-                    $totalPredictions ++;
-                } else if ($outcome > 0 || ($diff_score == 0 && $diff_prediction == 0)) {
-                    $points += 1;
-                    $outcomesPredicted ++;
-                    $totalPredictions ++;
-                }
-                else {
-                    $totalPredictions ++;
+                if ($prediction->game->finished) {
+                    $home_score = $prediction->game->home_score;
+                    $away_score = $prediction->game->away_score;
+                    $home_prediction = $prediction->home_score;
+                    $away_prediction = $prediction->away_score;
+    
+                    $diff_score = $home_score - $away_score;
+                    $diff_prediction = $home_prediction - $away_prediction;
+                    $outcome = $diff_score * $diff_prediction;
+    
+                    if ($home_score == $home_prediction && $away_score == $away_prediction) {
+                        $points += 3;
+                        $resultsPredicted ++;
+                        $totalPredictions ++;
+                    } else if ($outcome > 0 || ($diff_score == 0 && $diff_prediction == 0)) {
+                        $points += 1;
+                        $outcomesPredicted ++;
+                        $totalPredictions ++;
+                    }
+                    else {
+                        $totalPredictions ++;
+                    }
                 }
             }
             $formattedData[$user->id]['points'] = $points;
