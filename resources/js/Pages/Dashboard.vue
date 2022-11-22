@@ -10,7 +10,16 @@
 
         <div class="flex">
             <div class="w-full">
-                <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4" v-for="game in allGames" :key="game.id">
+                    <SwitchGroup as="div" class="flex items-center mx-auto w-max mt-4 cursor-pointer">
+                    <Switch v-model="showFinished" :class="[showFinished ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2']">
+                    <span aria-hidden="true" :class="[showFinished ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" />
+                    </Switch>
+                    <SwitchLabel as="span" class="ml-3">
+                    <span class="text-md font-medium text-gray-900">Show finished games</span>
+                    </SwitchLabel>
+                </SwitchGroup>
+                
+                <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4" v-for="game in allGames" :key="game.id" :class="{'hidden': (game.finished && !showFinished)}">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 relative">
                     <div class="flex w-full items-start">
                         <div class="w-2/5 text-right flex items-center justify-end p-2">
@@ -126,6 +135,7 @@ import moment from 'moment';
 import { ref, onMounted } from 'vue';
 import { PencilIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
 import axios from 'axios';
+import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 export default {
     components: {
@@ -134,6 +144,9 @@ export default {
         PencilIcon,
         ChevronDownIcon,
         ChevronUpIcon,
+        Switch,
+        SwitchGroup,
+        SwitchLabel
     },
 
     props: {
@@ -142,6 +155,7 @@ export default {
     },
 
     setup(props) {
+        const showFinished = ref(false)
         const allGames = ref(props.games)
         const allStandings = ref(props.standings)
         const selectedGroupStandings = ref()
@@ -209,6 +223,7 @@ export default {
             showDetails,
             selectedGame,
             hideDetails,
+            showFinished
         }
 
     }
