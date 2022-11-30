@@ -190,6 +190,9 @@ export default {
                 allGames.value = response.data.data.games
                 hidePredictionInput(game)
             })
+            .catch(function (error) {
+                alert(error.response.data.message)
+            });
         }
 
         const showDetails = function(game) {

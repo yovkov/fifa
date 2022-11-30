@@ -7,6 +7,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Standing;
 use App\Models\Prediction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -41,11 +42,21 @@ class GamesController extends Controller
 
     public function store(Request $request)
     {
+        $now = Carbon::now();
+
         $request->merge([
             'user_id' => auth()->user()->id,
         ]);
 
         $existsPrediction = Prediction::where('user_id',auth()->user()->id)->where('game_id',$request->get('game_id'))->first();
+        $game = Game::find($request->get('game_id'));
+
+        if ($now > $game->game_date)
+        {
+            return response([
+                'message' => __('No cheaterz! The game has started')
+            ], 400);
+        }
 
         if ($existsPrediction) {
             $existsPrediction->home_score = $request->get('home_score');
