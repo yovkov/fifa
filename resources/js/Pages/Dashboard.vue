@@ -92,7 +92,7 @@
                         <ChevronUpIcon v-if="selectedGame && selectedGame.id == game.id" @click="hideDetails(game)"
                             class="mx-auto h-8 w-8 text-gray-500 rounded-full bg-gray-100 p-1 hover:bg-blue-600 hover:text-white cursor-pointer" />
 
-                        <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4 md:flex" v-if="selectedGame.id == game.id">
+                        <div class="w-full mx-auto sm:px-6 lg:px-8 mt-4 md:flex" v-if="selectedGame && selectedGame.id == game.id">
                             <div v-if="selectedGame.type == 'group'"
                                 class="sm:w-full md:w-1/2 overflow-hidden sm:rounded-lg p-4 bg-slate-100 sm:mb-4 md:mb-0">
                                 <h1 class="text-lg font-bold">Group {{ selectedGroupStandings[0].group }}</h1>
